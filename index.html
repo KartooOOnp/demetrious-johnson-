@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mighty Mouse — Demetrious Johnson</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0d;
+    --bg-soft:#141416;
+    --gold:#f2c14e;
+    --red:#e6394680;
+    --ink:#f5f4ef;
+    --dim:#9a998f;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Space Grotesk',sans-serif;
+    overflow-x:hidden;
+    cursor:none;
+  }
+  ::selection{background:var(--gold);color:#0b0b0d;}
+
+  /* curseur custom */
+  #cursor{
+    position:fixed;width:22px;height:22px;border:1px solid var(--gold);
+    border-radius:50%;pointer-events:none;z-index:9999;
+    transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;
+    mix-blend-mode:difference;
+  }
+  #cursor.big{width:60px;height:60px;background:var(--gold);}
+
+  @media(hover:none){#cursor{display:none;} body{cursor:auto;}}
+
+  /* grain */
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:5;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 6%;
+    backdrop-filter:blur(10px);
+    background:rgba(11,11,13,.55);
+    border-bottom:1px solid rgba(255,255,255,.08);
+  }
+  .logo{font-family:'Anton',sans-serif;letter-spacing:2px;font-size:22px;}
+  .logo span{color:var(--gold);}
+  nav ul{display:flex;gap:34px;list-style:none;}
+  nav a{color:var(--ink);text-decoration:none;font-size:14px;letter-spacing:1px;text-transform:uppercase;position:relative;}
+  nav a::after{content:"";position:absolute;left:0;bottom:-4px;width:0;height:1px;background:var(--gold);transition:width .3s;}
+  nav a:hover::after{width:100%;}
+
+  header.hero{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+    text-align:center;position:relative;padding:0 5%;
+    background:radial-gradient(circle at 50% 30%, #1c1c1f 0%, var(--bg) 70%);
+  }
+  .kicker{color:var(--gold);letter-spacing:6px;font-size:12px;text-transform:uppercase;margin-bottom:18px;opacity:.85;}
+  h1.title{
+    font-family:'Anton',sans-serif;
+    font-size:clamp(56px,13vw,180px);
+    line-height:.85;
+    text-transform:uppercase;
+    letter-spacing:-2px;
+    background:linear-gradient(180deg,#fff, #7a7a7a);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p.sub{margin-top:22px;max-width:560px;color:var(--dim);font-size:16px;line-height:1.6;}
+  .scroll-cue{position:absolute;bottom:36px;font-size:12px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;}
+  .scroll-cue::before{content:"";display:block;width:1px;height:40px;background:var(--gold);margin:0 auto 10px;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:.2;}50%{opacity:1;}}
+
+  .marquee{
+    background:var(--gold);color:#0b0b0d;padding:14px 0;overflow:hidden;white-space:nowrap;
+    font-family:'Anton',sans-serif;font-size:20px;letter-spacing:1px;
+  }
+  .marquee div{display:inline-block;animation:scroll 18s linear infinite;}
+  @keyframes scroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+  section{padding:120px 6%;max-width:1200px;margin:0 auto;}
+  .reveal{opacity:0;transform:translateY(40px);transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  .about{display:grid;grid-template-columns:1.1fr .9fr;gap:70px;align-items:center;}
+  .about h2{font-family:'Anton',sans-serif;font-size:clamp(34px,4vw,54px);text-transform:uppercase;margin-bottom:24px;}
+  .about h2 span{color:var(--gold);}
+  .about p{color:var(--dim);line-height:1.8;font-size:16px;margin-bottom:16px;}
+  .tilt-card{perspective:1000px;}
+  .tilt-card img{
+    width:100%;border-radius:6px;display:block;
+    filter:grayscale(60%) contrast(1.05);
+    transition:transform .15s ease, filter .4s ease;
+  }
+  .tilt-card:hover img{filter:grayscale(0%) contrast(1.1);}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;margin-top:90px;border-top:1px solid rgba(255,255,255,.1);padding-top:50px;}
+  .stat h3{font-family:'Anton',sans-serif;font-size:clamp(34px,5vw,60px);color:var(--gold);}
+  .stat p{color:var(--dim);font-size:13px;text-transform:uppercase;letter-spacing:1px;margin-top:6px;}
+
+  .gallery-head{text-align:center;margin-bottom:60px;}
+  .gallery-head h2{font-family:'Anton',sans-serif;font-size:clamp(34px,5vw,60px);text-transform:uppercase;}
+  .gallery-head h2 span{color:var(--gold);}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .gcard{position:relative;overflow:hidden;border-radius:6px;aspect-ratio:3/4;}
+  .gcard img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease, filter .5s ease;filter:grayscale(40%);}
+  .gcard:hover img{transform:scale(1.08);filter:grayscale(0%);}
+  .gcard .cap{
+    position:absolute;left:0;right:0;bottom:0;padding:16px;
+    background:linear-gradient(0deg,rgba(0,0,0,.85),transparent);
+    font-size:13px;letter-spacing:1px;text-transform:uppercase;color:var(--gold);
+  }
+
+  .video-wrap{text-align:center;}
+  .video-wrap h2{font-family:'Anton',sans-serif;font-size:clamp(34px,5vw,60px);text-transform:uppercase;margin-bottom:40px;}
+  .video-frame{
+    position:relative;width:100%;padding-top:56.25%;border-radius:8px;overflow:hidden;
+    box-shadow:0 30px 80px -20px rgba(242,193,78,.15);
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+
+  footer{
+    padding:80px 6% 40px;border-top:1px solid rgba(255,255,255,.08);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:40px;
+  }
+  footer .brand{font-family:'Anton',sans-serif;font-size:26px;}
+  footer .brand span{color:var(--gold);}
+  .links-col h4{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--dim);margin-bottom:14px;}
+  .links-col a{display:block;color:var(--ink);text-decoration:none;font-size:15px;margin-bottom:10px;opacity:.85;}
+  .links-col a:hover{color:var(--gold);opacity:1;}
+  .bottom-bar{width:100%;text-align:center;margin-top:50px;color:var(--dim);font-size:12px;letter-spacing:1px;}
+
+  @media(max-width:800px){
+    .about{grid-template-columns:1fr;}
+    .stats{grid-template-columns:repeat(2,1fr);}
+    .gallery{grid-template-columns:1fr;}
+    nav ul{gap:16px;}
+    nav a{font-size:11px;}
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+
+<nav>
+  <div class="logo">MIGHTY <span>MOUSE</span></div>
+  <ul>
+    <li><a href="#about">Profil</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#video">Vidéo</a></li>
+    <li><a href="palmares.html">Palmarès</a></li>
+  </ul>
+</nav>
+
+<header class="hero">
+  <div class="kicker">UFC · ONE Championship · Flyweight GOAT</div>
+  <h1 class="title">Demetrious<br>Johnson</h1>
+  <p class="sub">Le combattant le plus précis, le plus rapide et le plus intelligent que les arts martiaux mixtes aient connu. Surnommé « Mighty Mouse », il redéfinit ce que la petite catégorie peut accomplir.</p>
+  <div class="scroll-cue">Défiler</div>
+</header>
+
+<div class="marquee">
+  <div>MIGHTY MOUSE&nbsp;&nbsp;·&nbsp;&nbsp;POUND-FOR-POUND&nbsp;&nbsp;·&nbsp;&nbsp;11 DÉFENSES CONSÉCUTIVES&nbsp;&nbsp;·&nbsp;&nbsp;GOAT DES POIDS MOUCHE&nbsp;&nbsp;·&nbsp;&nbsp;MIGHTY MOUSE&nbsp;&nbsp;·&nbsp;&nbsp;POUND-FOR-POUND&nbsp;&nbsp;·&nbsp;&nbsp;11 DÉFENSES CONSÉCUTIVES&nbsp;&nbsp;·&nbsp;&nbsp;GOAT DES POIDS MOUCHE&nbsp;&nbsp;·&nbsp;&nbsp;</div>
+</div>
+
+<section class="about reveal" id="about">
+  <div>
+    <h2>Le poids mouche <span>parfait</span></h2>
+    <p>Né le 13 août 1986 à Madisonville, Kentucky, Demetrious Khrisna Johnson découvre le MMA presque par hasard avant de devenir le premier champion des poids mouche de l'histoire de l'UFC.</p>
+    <p>Sa marque de fabrique : une explosivité chirurgicale, un cardio inépuisable et une intelligence tactique qui lui ont permis d'enchaîner 11 défenses de titre consécutives — un record de la division qui tient toujours.</p>
+    <p>Après l'UFC, il rejoint ONE Championship en Asie, où il devient champion du monde et remporte le Grand Prix des poids mouche 2019, confirmant son statut de meilleur combattant livre pour livre de sa génération.</p>
+  </div>
+  <div class="tilt-card" id="tilt">
+    <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Demetrious%20Johnson%202024.png" alt="Portrait de Demetrious Johnson">
+  </div>
+</section>
+
+<section class="stats reveal">
+  <div class="stat"><h3 data-count="11">0</h3><p>Défenses de titre consécutives</p></div>
+  <div class="stat"><h3 data-count="13">0</h3><p>Victoires consécutives en UFC</p></div>
+  <div class="stat"><h3 data-count="30">0</h3><p>Victoires en carrière</p></div>
+  <div class="stat"><h3 data-count="2">0</h3><p>Ceintures mondiales (UFC + ONE)</p></div>
+</section>
+
+<section class="reveal" id="gallery">
+  <div class="gallery-head">
+    <h2>Dans <span>l'octogone</span></h2>
+  </div>
+  <div class="gallery">
+    <div class="gcard">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Demetrious%20Johnson.png" alt="Demetrious Johnson pose photo">
+      <div class="cap">Portrait officiel</div>
+    </div>
+    <div class="gcard">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Demetrious%20Johnson%202024.png" alt="Demetrious Johnson 2024">
+      <div class="cap">Mighty Mouse, 2024</div>
+    </div>
+    <div class="gcard">
+      <img src="https://commons.wikimedia.org/wiki/Special:FilePath/MMA%20Fighters%20Visit%20Charleston%20(6).jpg" alt="Rencontre avec des fans">
+      <div class="cap">Rencontre avec les fans</div>
+    </div>
+  </div>
+</section>
+
+<section class="video-wrap reveal" id="video">
+  <h2>Les <span style="color:var(--gold)">meilleurs</span> moments</h2>
+  <div class="video-frame">
+    <iframe src="https://www.youtube.com/embed/0_1OKlU7QXk" title="Demetrious Johnson highlights" allowfullscreen></iframe>
+  </div>
+</section>
+
+<footer>
+  <div>
+    <div class="brand">MIGHTY <span>MOUSE</span></div>
+    <p style="color:var(--dim);font-size:13px;margin-top:10px;max-width:260px;">Site réalisé dans le cadre d'un projet scolaire.</p>
+  </div>
+  <div class="links-col">
+    <h4>En savoir plus</h4>
+    <a href="https://en.wikipedia.org/wiki/Demetrious_Johnson" target="_blank">Wikipédia</a>
+    <a href="https://www.ufc.com/athlete/demetrious-johnson" target="_blank">Profil UFC</a>
+    <a href="https://www.onefc.com/athletes/demetrious-johnson/" target="_blank">Profil ONE Championship</a>
+  </div>
+  <div class="links-col">
+    <h4>Navigation</h4>
+    <a href="palmares.html">Palmarès &amp; contact</a>
+    <a href="#about">Profil</a>
+    <a href="#video">Vidéo</a>
+  </div>
+  <div class="bottom-bar">© 2026 — Projet scolaire · Fan page non officielle</div>
+</footer>
+
+<script>
+  const cur=document.getElementById('cursor');
+  window.addEventListener('mousemove',e=>{
+    cur.style.left=e.clientX+'px';
+    cur.style.top=e.clientY+'px';
+  });
+  document.querySelectorAll('a,.gcard,.tilt-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>cur.classList.add('big'));
+    el.addEventListener('mouseleave',()=>cur.classList.remove('big'));
+  });
+
+  const tilt=document.getElementById('tilt');
+  tilt.addEventListener('mousemove',e=>{
+    const r=tilt.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5;
+    const y=(e.clientY-r.top)/r.height-.5;
+    tilt.querySelector('img').style.transform=`rotateY(${x*14}deg) rotateX(${-y*14}deg) scale(1.03)`;
+  });
+  tilt.addEventListener('mouseleave',()=>{
+    tilt.querySelector('img').style.transform='rotateY(0) rotateX(0) scale(1)';
+  });
+
+  const obs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{ if(en.isIntersecting) en.target.classList.add('in'); });
+  },{threshold:.2});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+  const counters=document.querySelectorAll('[data-count]');
+  const countObs=new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        const el=en.target, target=+el.dataset.count;
+        let cur=0; const step=Math.max(1,Math.ceil(target/40));
+        const t=setInterval(()=>{ cur+=step; if(cur>=target){cur=target;clearInterval(t);} el.textContent=cur; },30);
+        countObs.unobserve(el);
+      }
+    });
+  },{threshold:.5});
+  counters.forEach(c=>countObs.observe(c));
+</script>
+</body>
+</html>
